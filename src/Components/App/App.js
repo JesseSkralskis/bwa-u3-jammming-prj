@@ -5,10 +5,13 @@ import SearchBar from '../SearchBar/SearchBar.js';
 import SearchResults from '../SearchResults/SearchResults.js';
 import Playlist from '../Playlist/Playlist.js';
 import Spotify from '../../util/Spotify.js';
+import bg2 from './background_photo_desktop.jpg';
+
 
 
 
 class App extends React.Component {
+
     constructor(props) {
         super(props);
         this.child = React.createRef();
@@ -17,11 +20,14 @@ class App extends React.Component {
         this.updatePlaylistName = this.updatePlaylistName.bind(this);
         this.savePlaylist = this.savePlaylist.bind(this);
         this.searchSpotify = this.searchSpotify.bind(this);
+        this.clickSearch=this.clickSearch.bind(this);
 
 
 
 
         this.state = {
+
+
 
             backgroundImage: '',
 
@@ -45,9 +51,9 @@ class App extends React.Component {
 
     }
 
-    clickSearch = () => {
+    clickSearch = (url) => {
         this.setState({
-            backgroundImage: "url('background_photo_desktop.jpg')"
+            backgroundImage: url
 
         })
     };
@@ -141,13 +147,14 @@ class App extends React.Component {
 
     render() {
 
+
         return (
             <div onLoad={this.getToken()}>
                 <h1>MY SHI<span className="highlight">ZZZZZ</span>LE</h1>
                 <div style={{backgroundImage:this.state.backgroundImage}} className="App">
 
                     <div className="App-playlist">
-                        <SearchBar searchClicked={this.clickSearch}  onSearch={this.searchSpotify}/>
+                        <SearchBar image={bg2} searchClicked={this.clickSearch}  onSearch={this.searchSpotify}/>
                         <SearchResults isRemoval={false}  onAdd={this.addTrack}
                                        searchResults={this.state.searchResults}/>
                         <Playlist onSave={this.savePlaylist} onNameChange={this.updatePlaylistName}

@@ -32,3 +32,30 @@
   font-weight: 300;
   color: rgba(256, 256, 256, 0.8);
 }
+.Playlist-save {
+  cursor: pointer;
+  width: 10rem;
+  padding: .77rem 0;
+  border-radius: 54px;
+  margin-top: 1.27rem;
+  background-color: #6c41ec;
+  text-align: center;
+  font-size: .83rem;
+  transition: background-color .25s;
+}
+
+.Playlist-save:hover {
+  background-color: rgba(108, 65, 233, .7);
+}
+a:link{
+  color: #ff3df1;
+
+}
+a:active {
+  color: #80cdff;
+}
+
+a:visited{
+  color: #000000;
+
+}

@@ -1,7 +1,7 @@
 let usersAccessToken = '';
 const clientId = 'ca47d370807d46718c513653fa4b3d2e';
 const UriRedirect = 'http://myShizzzle.surge.sh';
-
+// 'http://localhost:3000/';
 
 
 const Spotify = {
@@ -81,19 +81,20 @@ const Spotify = {
             }
 
         },
+
+
         savePlaylist(uriArray, plName) {
 
-            console.log('this is whats coming into uriArray'+ uriArray);
-            console.log('this is the name'+ plName);
+            console.log('this is whats coming into uriArray' + uriArray);
+            console.log('this is the name' + plName);
             let token = usersAccessToken;
             let userId = 'not changing';
-
 
 
             if (uriArray && plName) {
 
 
-              fetch('https://api.spotify.com/v1/me', {
+                fetch('https://api.spotify.com/v1/me', {
                     headers: {
                         'Authorization': `Bearer ${token}`
 
@@ -102,71 +103,58 @@ const Spotify = {
                 }).then(response => response.json()
                 ).then(jsonResponse => {
 
-                   userId = jsonResponse.id;
-                   console.log(userId);
+                    userId = jsonResponse.id;
+                    console.log(userId);
 
 
+                    fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+
+                        },
+                        method: 'POST',
+
+                        body: JSON.stringify({name: plName}),
+
+                    }).then(response => {
+                        return response.json();
 
 
+                    }).then(jsonResponse => {
 
-                  fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
-                      headers: {
-                          Authorization: `Bearer ${token}`,
-                          'Content-Type': 'application/json'
+                        console.log(jsonResponse);
+                        let plId = jsonResponse.id;
+                        console.log(plId);
 
-                      },
-                      method: 'POST',
+                        fetch(`https://api.spotify.com/v1/playlists/${plId}/tracks`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                'Content-Type': 'application/json'
 
-                      body: JSON.stringify({name: plName}),
+                            },
+                            method: 'POST',
 
-                  }).then(response => {
-                      return response.json();
+                            body: JSON.stringify({uris: uriArray}),
 
-
-
-
-
-                      }).then(jsonResponse => {
-
-                      console.log(jsonResponse);
-                      let plId = jsonResponse.id;
-                      console.log (plId);
-
-                      fetch(`https://api.spotify.com/v1/playlists/${plId}/tracks`, {
-                          headers: {
-                              Authorization: `Bearer ${token}`,
-                              'Content-Type': 'application/json'
-
-                          },
-                          method: 'POST',
-
-                          body: JSON.stringify({uris: uriArray}),
-
-                      }).then(response => {
-                          return response.json();
+                        }).then(response => {
+                            return response.json();
 
 
+                        }).then(jsonResponse => {
+
+                            console.log(jsonResponse);
+                            let plId2 = jsonResponse.snapshot_id;
+                            console.log(plId2);
 
 
-
-                      }).then(jsonResponse => {
-
-                          console.log(jsonResponse);
-                          let plId2 = jsonResponse.snapshot_id;
-                          console.log (plId2);
+                        })
 
 
-                      })
+                    })
 
 
-                  })
-
-
-
-
-              });
-
-
+                });
 
 
             } else {
@@ -174,7 +162,25 @@ const Spotify = {
             }
 
 
+        },
+        getPreviewUrl(trackId) {
+            return fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+                headers: {
+                    Authorization: `Bearer ${usersAccessToken}`
+                }
+            }).then(response => {
+                return response.json()
+            }).then(jsonResponse => {
+                console.log(jsonResponse);
+                return ({
+                    URL: jsonResponse.preview_url,
+                    Id: jsonResponse.id
+                })
+            })
+
+
         }
+
 
     }
 ;
